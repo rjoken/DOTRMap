@@ -11,9 +11,9 @@ namespace DOTRMap
 		public const int TILESIZE = 32;
 
 		//this is manual the revision number is just the number of days i've worked on it
-		public const string VERSION = "DOTRMap v0.3.6_02";
+		public const string VERSION = "DOTRMap v0.3.7";
 
-		public const string BUILT = "21-09-2020";
+		public const string BUILT = "23-09-2020";
 
 		public const int SLUSSIZE = 0x21EBD8;
 

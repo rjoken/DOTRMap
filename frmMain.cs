@@ -315,6 +315,7 @@ namespace DOTRMap
             "Ishtar",
             "Necromancer",
             "Darkness-ruler",
+            "Labyrinth-ruler",
             "Pegasus",
             "Richard",
             "Tea",
