@@ -51,6 +51,7 @@ namespace DOTRMap
         private System.Windows.Forms.Panel pnlPalette;
 
         private byte[] fileSlus;
+        private byte[] fileIso;
 		private Map loadedMap;
         private Panel pnlSelected;
         private Panel pnlEditor;
@@ -60,7 +61,11 @@ namespace DOTRMap
         private Palette palette;
         private Button btnReload;
         private MenuItem menuHelpAbout;
+        private MenuItem menuOpenIso;
         private String slusPath;
+        private String isoPath;
+        private MenuItem menuSaveIso;
+        private bool isoMode;
 
 		public frmMain()
 		{
@@ -112,6 +117,7 @@ namespace DOTRMap
             this.menuFileOpen = new System.Windows.Forms.MenuItem();
             this.menuOpenSlus = new System.Windows.Forms.MenuItem();
             this.menuOpenMap = new System.Windows.Forms.MenuItem();
+            this.menuOpenIso = new System.Windows.Forms.MenuItem();
             this.menuFileSave = new System.Windows.Forms.MenuItem();
             this.menuSaveSlus = new System.Windows.Forms.MenuItem();
             this.menuSaveMap = new System.Windows.Forms.MenuItem();
@@ -136,6 +142,7 @@ namespace DOTRMap
             this.gbxSelected = new System.Windows.Forms.GroupBox();
             this.pnlSelected = new System.Windows.Forms.Panel();
             this.tmrRefresh = new System.Windows.Forms.Timer(this.components);
+            this.menuSaveIso = new System.Windows.Forms.MenuItem();
             this.tabctrlMain.SuspendLayout();
             this.tabInjector.SuspendLayout();
             this.tabEditor.SuspendLayout();
@@ -163,7 +170,8 @@ namespace DOTRMap
             this.menuFileOpen.Index = 0;
             this.menuFileOpen.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
             this.menuOpenSlus,
-            this.menuOpenMap});
+            this.menuOpenMap,
+            this.menuOpenIso});
             this.menuFileOpen.Text = "Open...";
             // 
             // menuOpenSlus
@@ -178,12 +186,19 @@ namespace DOTRMap
             this.menuOpenMap.Text = "Map";
             this.menuOpenMap.Click += new System.EventHandler(this.menuOpenMap_Click);
             // 
+            // menuOpenIso
+            // 
+            this.menuOpenIso.Index = 2;
+            this.menuOpenIso.Text = "ISO";
+            this.menuOpenIso.Click += new System.EventHandler(this.menuOpenIso_Click);
+            // 
             // menuFileSave
             // 
             this.menuFileSave.Index = 1;
             this.menuFileSave.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
             this.menuSaveSlus,
-            this.menuSaveMap});
+            this.menuSaveMap,
+            this.menuSaveIso});
             this.menuFileSave.Text = "Save...";
             // 
             // menuSaveSlus
@@ -216,7 +231,7 @@ namespace DOTRMap
             // 
             this.menuHelpAbout.Index = 0;
             this.menuHelpAbout.Text = "About";
-            this.menuHelpAbout.Click += new System.EventHandler(this.menuItem1_Click);
+            this.menuHelpAbout.Click += new System.EventHandler(this.menuHelpAbout_Click);
             // 
             // tabctrlMain
             // 
@@ -251,7 +266,7 @@ namespace DOTRMap
             this.btnReload.Name = "btnReload";
             this.btnReload.Size = new System.Drawing.Size(168, 23);
             this.btnReload.TabIndex = 6;
-            this.btnReload.Text = "Reload SLUS";
+            this.btnReload.Text = "Reload File";
             this.btnReload.UseVisualStyleBackColor = true;
             this.btnReload.Click += new System.EventHandler(this.btnReload_Click);
             // 
@@ -447,6 +462,12 @@ namespace DOTRMap
             // 
             this.tmrRefresh.Tick += new System.EventHandler(this.tmrRefresh_Tick);
             // 
+            // menuSaveIso
+            // 
+            this.menuSaveIso.Enabled = false;
+            this.menuSaveIso.Index = 2;
+            this.menuSaveIso.Text = "ISO";
+            // 
             // frmMain
             // 
             this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
@@ -484,8 +505,16 @@ namespace DOTRMap
             File.WriteAllBytes(path, memorySlus);
         }
 
+        private void SaveIso(String path, byte[] memoryIso)
+        {
+            File.WriteAllBytes(path, memoryIso);
+        }
+
+
         private byte[] OpenSlus(String path, byte[] memorySlus)
         {
+            isoMode = false;
+            menuOpenIso.Enabled = false;
             using (FileStream fs = new FileStream(path, FileMode.Open, FileAccess.Read))
             {
                 memorySlus = new byte[fs.Length];
@@ -505,6 +534,31 @@ namespace DOTRMap
             }
 
             return memorySlus;
+        }
+
+        private byte[] OpenIso(String path, byte[] memoryIso)
+        {
+            isoMode = true;
+            menuOpenSlus.Enabled = false;
+            using (FileStream fs = new FileStream(path, FileMode.Open, FileAccess.Read))
+            {
+                memoryIso = new byte[fs.Length];
+                int bytesToRead = (int)fs.Length;
+                int bytesRead = 0;
+                while(bytesToRead > 0)
+                {
+                    int b = fs.Read(memoryIso, bytesRead, bytesToRead);
+                    if (b == 0)
+                    {
+                        break;
+                    }
+
+                    bytesRead += b;
+                    bytesToRead -= b;
+                }
+            }
+
+            return memoryIso;
         }
 
 		private void menuFileExit_Click(object sender, System.EventArgs e)
@@ -535,10 +589,11 @@ namespace DOTRMap
                         slusPath = ofd.FileName;
                         fileSlus = OpenSlus(slusPath, fileSlus);
 
-                        //TODO: advanced offset editing if file size is unexpected, along with a warning. For now, just deny opening the file
+                        //TODO: advanced offset editing if file size is unexpected, along with a warning. For now, just provide a warning
                         if (fileSlus.Length != Constants.SLUSSIZE)
                         {
-                            throw new Exception("The SLUS provided was corrupt!");
+                            //throw new Exception("The SLUS provided was corrupt!");
+                            MessageBox.Show("The SLUS size appears to be abnormal. The program will run, but the offset may be incorrect.", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                         }
 						lblSlus.Text = "SLUS loaded\n" + fileSlus.Length.ToString() + " bytes.";
 
@@ -559,6 +614,47 @@ namespace DOTRMap
 			}
 		}
 
+        private void menuOpenIso_Click(object sender, EventArgs e)
+        {
+            isoPath = string.Empty;
+            using (OpenFileDialog ofd = new OpenFileDialog())
+            {
+                ofd.Filter = "ISO files (*.iso)|*.iso";
+                ofd.FilterIndex = 2;
+                ofd.RestoreDirectory = true;
+
+                if (ofd.ShowDialog() == DialogResult.OK)
+                {
+                    try
+                    {
+                        isoPath = ofd.FileName;
+                        fileIso = OpenIso(isoPath, fileIso);
+
+                        //TODO: advanced offset editing if file size is unexpected, along with a warning. For now, just give a warning
+                        if (fileIso.Length != Constants.ISOSIZE)
+                        {
+                            //throw new Exception("The SLUS provided was corrupt!");
+                            MessageBox.Show("The SLUS size appears to be abnormal. The program will run, but the offset may be incorrect.", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        }
+                        lblSlus.Text = "ISO loaded\n" + fileIso.Length.ToString() + " bytes.";
+
+                        //enable all SLUS related buttons
+                        menuSaveIso.Enabled = true;
+                        lbxMaps.Enabled = true;
+                        btnLoad.Enabled = true;
+                        btnExport.Enabled = true;
+                        btnInject.Enabled = true;
+                        btnReload.Enabled = true;
+                        lbxMaps.SelectedIndex = 0;
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show("ISO could not be loaded. " + ex.ToString(), "Error", MessageBoxButtons.OK);
+                    }
+                }
+            }
+        }
+
         // called at 60 frames per second..
         private void pnlEditor_Paint(object sender, PaintEventArgs e)
         {
@@ -568,7 +664,7 @@ namespace DOTRMap
         private void pnlPalette_Paint(object sender, System.Windows.Forms.PaintEventArgs e)
 		{
             // i cant get this centred nicely
-			palette.Draw(e.Graphics, 6, 8);
+			palette.Draw(e.Graphics, 6, 8); //magic numbers
 		}
 
         private void pnlSelected_Paint(object sender, PaintEventArgs e)
@@ -765,12 +861,19 @@ namespace DOTRMap
         // load a map from the SLUS in memory given the selected index of lbxMaps
         private void btnLoad_Click(object sender, EventArgs e)
         {
-            int mapOffset = 0x1D575C;
+            int mapOffset;
+            if (!isoMode)
+                mapOffset = Constants.SLUSOFFSET;
+            else
+                mapOffset = Constants.ISOOFFSET;
             mapOffset += lbxMaps.SelectedIndex * 0x31;
             byte[] slusMap = new byte[49];
             for(int i = 0; i < slusMap.Length; i++)
             {
-                slusMap[i] = fileSlus[mapOffset + i];
+                if(!isoMode)
+                    slusMap[i] = fileSlus[mapOffset + i];
+                else
+                    slusMap[i] = fileIso[mapOffset + i];
             }
             loadedMap = new Map(slusMap);
             tabctrlMain.SelectedTab = tabEditor;
@@ -779,15 +882,23 @@ namespace DOTRMap
         // export map from SLUS to dor file
         private void btnExport_Click(object sender, EventArgs e)
         {
-            int mapOffset = 0x1D575C;
+            int mapOffset;
+            if (!isoMode)
+                mapOffset = Constants.SLUSOFFSET;
+            else
+                mapOffset = Constants.ISOOFFSET;
             mapOffset += lbxMaps.SelectedIndex * 0x31;
             byte[] slusMap = new byte[49];
             for (int i = 0; i < slusMap.Length; i++)
             {
-                slusMap[i] = fileSlus[mapOffset + i];
+                if(!isoMode)
+                    slusMap[i] = fileSlus[mapOffset + i];
+                else
+                    slusMap[i] = fileIso[mapOffset + i];
             }
             loadedMap = new Map(slusMap);
-            //dirty
+
+            //dirty i have no idea why this is needed
             menuSaveMap_Click(sender, e);
             loadedMap = new Map();
         }
@@ -798,17 +909,37 @@ namespace DOTRMap
             DialogResult result1 = MessageBox.Show("This will insert the map currently being edited into the specified slot. Would you like to continue?", "Warning", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
             if(result1 == DialogResult.Yes)
             {
-                int mapOffset = 0x1D575C;
+                int mapOffset;
+                if (!isoMode)
+                    mapOffset = Constants.SLUSOFFSET;
+                else
+                    mapOffset = Constants.ISOOFFSET;
                 mapOffset += lbxMaps.SelectedIndex * 0x31;
                 for(int i = 0; i < loadedMap.GetTilesLength(); i++)
                 {
-                    fileSlus[mapOffset + i] = loadedMap.GetTile(i).GetTerrainAsByte();
+                    if(!isoMode)
+                        fileSlus[mapOffset + i] = loadedMap.GetTile(i).GetTerrainAsByte();
+                    else
+                        fileIso[mapOffset + i] = loadedMap.GetTile(i).GetTerrainAsByte();
                 }
 
-                DialogResult result2 = MessageBox.Show("The map was written to memory. Would you like to save the changes to the SLUS now?", "Success", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                DialogResult result2 = MessageBox.Show("The map was written to memory. Would you like to save the changes to the SLUS/ISO now? This may take a while if you are saving to ISO.", "Success", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
                 if(result2 == DialogResult.Yes)
                 {
-                    SaveSlus(slusPath, fileSlus);
+                    if (!isoMode)
+                    {
+                        Cursor.Current = Cursors.WaitCursor;
+                        SaveSlus(slusPath, fileSlus);
+                        Cursor.Current = Cursors.Default;
+                        MessageBox.Show("Changes were saved.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
+                    else
+                    {
+                        Cursor.Current = Cursors.WaitCursor;
+                        SaveIso(isoPath, fileIso);
+                        Cursor.Current = Cursors.Default;
+                        MessageBox.Show("Changes were saved.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
                 }
 
             }
@@ -818,7 +949,10 @@ namespace DOTRMap
         // save the SLUS file to disk from fileSlus
         private void menuSaveSlus_Click(object sender, EventArgs e)
         {
-            SaveSlus(slusPath, fileSlus);
+            if (!isoMode)
+                SaveSlus(slusPath, fileSlus);
+            else
+                SaveIso(isoPath, fileIso);
         }
 
         // reload SLUS from disk
@@ -827,14 +961,17 @@ namespace DOTRMap
             DialogResult result1 = MessageBox.Show("You will lose all unsaved changes. Continue?", "Warning", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
             if (result1 == DialogResult.Yes)
             {
-                fileSlus = OpenSlus(slusPath, fileSlus);
+                if(!isoMode)
+                    fileSlus = OpenSlus(slusPath, fileSlus);
             }
         }
 
         // About DOTRMap
-        private void menuItem1_Click(object sender, EventArgs e)
+        private void menuHelpAbout_Click(object sender, EventArgs e)
         {
             MessageBox.Show(Constants.VERSION + " built " + Constants.BUILT + " by thots.\nSpecial thanks: GenericMadScientist", "About DOTRMap", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
+
+        
     }
 }

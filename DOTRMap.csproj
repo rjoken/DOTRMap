@@ -85,21 +85,21 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Constants.cs" />
-    <Compile Include="frmMain.cs">
+    <Compile Include="DOTRMap\Constants.cs" />
+    <Compile Include="DOTRMap\frmMain.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Map.cs">
+    <Compile Include="DOTRMap\Map.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Palette.cs">
+    <Compile Include="DOTRMap\Palette.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Tile.cs">
+    <Compile Include="DOTRMap\Tile.cs">
       <SubType>Code</SubType>
     </Compile>
     <EmbeddedResource Include="Resources\ROSE.ICO" />
-    <EmbeddedResource Include="frmMain.resx">
+    <EmbeddedResource Include="DOTRMap\frmMain.resx">
       <DependentUpon>frmMain.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Resources\CRUSH.PNG" />
@@ -114,7 +114,7 @@
     <EmbeddedResource Include="Resources\WASTELAND.PNG" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="app.config" />
+    <None Include="DOTRMap\app.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
