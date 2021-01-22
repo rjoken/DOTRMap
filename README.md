@@ -2,7 +2,7 @@
 A map editor for Yu-Gi-Oh! The Duelists of the Roses
 
 ## Install
-You can download the latest version of DOTRMap from the [Releases Page](https://github.com/rjoken/DOTRMap/releases).
+You can download the latest version of DOTRMap from the [Releases Page](https://github.com/rjoken/DOTRMap/releases). The latest version is v0.3.9
 
 This tool is only available natively for Windows (NT 5.0 - 10.0 are tested working). I have not tested with Wine - your mileage may vary.
 
