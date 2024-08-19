@@ -6,7 +6,7 @@ using System.ComponentModel;
 using System.Windows.Forms;
 using System.Data;
 using System.Reflection;
-
+using DOTRMap.DOTRMap;
 
 namespace DOTRMap
 {
@@ -121,6 +121,7 @@ namespace DOTRMap
             this.menuFileSave = new System.Windows.Forms.MenuItem();
             this.menuSaveSlus = new System.Windows.Forms.MenuItem();
             this.menuSaveMap = new System.Windows.Forms.MenuItem();
+            this.menuSaveIso = new System.Windows.Forms.MenuItem();
             this.menuFileExit = new System.Windows.Forms.MenuItem();
             this.menuHelp = new System.Windows.Forms.MenuItem();
             this.menuHelpAbout = new System.Windows.Forms.MenuItem();
@@ -142,7 +143,6 @@ namespace DOTRMap
             this.gbxSelected = new System.Windows.Forms.GroupBox();
             this.pnlSelected = new System.Windows.Forms.Panel();
             this.tmrRefresh = new System.Windows.Forms.Timer(this.components);
-            this.menuSaveIso = new System.Windows.Forms.MenuItem();
             this.tabctrlMain.SuspendLayout();
             this.tabInjector.SuspendLayout();
             this.tabEditor.SuspendLayout();
@@ -214,6 +214,12 @@ namespace DOTRMap
             this.menuSaveMap.Text = "Map";
             this.menuSaveMap.Click += new System.EventHandler(this.menuSaveMap_Click);
             // 
+            // menuSaveIso
+            // 
+            this.menuSaveIso.Enabled = false;
+            this.menuSaveIso.Index = 2;
+            this.menuSaveIso.Text = "ISO";
+            // 
             // menuFileExit
             // 
             this.menuFileExit.Index = 2;
@@ -262,9 +268,9 @@ namespace DOTRMap
             // btnReload
             // 
             this.btnReload.Enabled = false;
-            this.btnReload.Location = new System.Drawing.Point(208, 163);
+            this.btnReload.Location = new System.Drawing.Point(208, 176);
             this.btnReload.Name = "btnReload";
-            this.btnReload.Size = new System.Drawing.Size(168, 23);
+            this.btnReload.Size = new System.Drawing.Size(168, 24);
             this.btnReload.TabIndex = 6;
             this.btnReload.Text = "Reload File";
             this.btnReload.UseVisualStyleBackColor = true;
@@ -273,9 +279,9 @@ namespace DOTRMap
             // btnInject
             // 
             this.btnInject.Enabled = false;
-            this.btnInject.Location = new System.Drawing.Point(208, 133);
+            this.btnInject.Location = new System.Drawing.Point(208, 143);
             this.btnInject.Name = "btnInject";
-            this.btnInject.Size = new System.Drawing.Size(168, 23);
+            this.btnInject.Size = new System.Drawing.Size(168, 25);
             this.btnInject.TabIndex = 5;
             this.btnInject.Text = "Inject Map";
             this.btnInject.Click += new System.EventHandler(this.btnInject_Click);
@@ -283,9 +289,9 @@ namespace DOTRMap
             // btnLoad
             // 
             this.btnLoad.Enabled = false;
-            this.btnLoad.Location = new System.Drawing.Point(208, 104);
+            this.btnLoad.Location = new System.Drawing.Point(208, 112);
             this.btnLoad.Name = "btnLoad";
-            this.btnLoad.Size = new System.Drawing.Size(168, 23);
+            this.btnLoad.Size = new System.Drawing.Size(168, 25);
             this.btnLoad.TabIndex = 4;
             this.btnLoad.Text = "Load Selected";
             this.btnLoad.Click += new System.EventHandler(this.btnLoad_Click);
@@ -293,26 +299,26 @@ namespace DOTRMap
             // btnExport
             // 
             this.btnExport.Enabled = false;
-            this.btnExport.Location = new System.Drawing.Point(208, 72);
+            this.btnExport.Location = new System.Drawing.Point(208, 78);
             this.btnExport.Name = "btnExport";
-            this.btnExport.Size = new System.Drawing.Size(168, 23);
+            this.btnExport.Size = new System.Drawing.Size(168, 24);
             this.btnExport.TabIndex = 3;
             this.btnExport.Text = "Export";
             this.btnExport.Click += new System.EventHandler(this.btnExport_Click);
             // 
             // lblSlus
             // 
-            this.lblSlus.Location = new System.Drawing.Point(216, 24);
+            this.lblSlus.Location = new System.Drawing.Point(216, 26);
             this.lblSlus.Name = "lblSlus";
-            this.lblSlus.Size = new System.Drawing.Size(152, 32);
+            this.lblSlus.Size = new System.Drawing.Size(152, 34);
             this.lblSlus.TabIndex = 1;
             this.lblSlus.Text = "SLUS not loaded";
             // 
             // gbxStatus
             // 
-            this.gbxStatus.Location = new System.Drawing.Point(208, 8);
+            this.gbxStatus.Location = new System.Drawing.Point(208, 9);
             this.gbxStatus.Name = "gbxStatus";
-            this.gbxStatus.Size = new System.Drawing.Size(168, 56);
+            this.gbxStatus.Size = new System.Drawing.Size(168, 60);
             this.gbxStatus.TabIndex = 2;
             this.gbxStatus.TabStop = false;
             this.gbxStatus.Text = "Status";
@@ -389,16 +395,16 @@ namespace DOTRMap
             // lblRR
             // 
             this.lblRR.AutoSize = true;
-            this.lblRR.Location = new System.Drawing.Point(227, 255);
+            this.lblRR.Location = new System.Drawing.Point(227, 261);
             this.lblRR.Name = "lblRR";
-            this.lblRR.Size = new System.Drawing.Size(27, 13);
+            this.lblRR.Size = new System.Drawing.Size(26, 13);
             this.lblRR.TabIndex = 4;
             this.lblRR.Text = "Red";
             // 
             // lblWR
             // 
             this.lblWR.AutoSize = true;
-            this.lblWR.Location = new System.Drawing.Point(224, 10);
+            this.lblWR.Location = new System.Drawing.Point(224, 11);
             this.lblWR.Name = "lblWR";
             this.lblWR.Size = new System.Drawing.Size(35, 13);
             this.lblWR.TabIndex = 3;
@@ -408,7 +414,7 @@ namespace DOTRMap
             // 
             this.pnlEditor.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.pnlEditor.CausesValidation = false;
-            this.pnlEditor.Location = new System.Drawing.Point(127, 28);
+            this.pnlEditor.Location = new System.Drawing.Point(127, 30);
             this.pnlEditor.Name = "pnlEditor";
             this.pnlEditor.Size = new System.Drawing.Size(224, 224);
             this.pnlEditor.TabIndex = 2;
@@ -421,18 +427,18 @@ namespace DOTRMap
             // gbxPalette
             // 
             this.gbxPalette.Controls.Add(this.pnlPalette);
-            this.gbxPalette.Location = new System.Drawing.Point(8, 8);
+            this.gbxPalette.Location = new System.Drawing.Point(8, 9);
             this.gbxPalette.Name = "gbxPalette";
-            this.gbxPalette.Size = new System.Drawing.Size(86, 192);
+            this.gbxPalette.Size = new System.Drawing.Size(86, 206);
             this.gbxPalette.TabIndex = 0;
             this.gbxPalette.TabStop = false;
             this.gbxPalette.Text = "Palette";
             // 
             // pnlPalette
             // 
-            this.pnlPalette.Location = new System.Drawing.Point(6, 11);
+            this.pnlPalette.Location = new System.Drawing.Point(6, 12);
             this.pnlPalette.Name = "pnlPalette";
-            this.pnlPalette.Size = new System.Drawing.Size(72, 175);
+            this.pnlPalette.Size = new System.Drawing.Size(72, 188);
             this.pnlPalette.TabIndex = 0;
             this.pnlPalette.Paint += new System.Windows.Forms.PaintEventHandler(this.pnlPalette_Paint);
             this.pnlPalette.MouseDown += new System.Windows.Forms.MouseEventHandler(this.pnlPalette_MouseDown);
@@ -442,9 +448,9 @@ namespace DOTRMap
             // gbxSelected
             // 
             this.gbxSelected.Controls.Add(this.pnlSelected);
-            this.gbxSelected.Location = new System.Drawing.Point(8, 216);
+            this.gbxSelected.Location = new System.Drawing.Point(8, 233);
             this.gbxSelected.Name = "gbxSelected";
-            this.gbxSelected.Size = new System.Drawing.Size(86, 86);
+            this.gbxSelected.Size = new System.Drawing.Size(86, 92);
             this.gbxSelected.TabIndex = 1;
             this.gbxSelected.TabStop = false;
             this.gbxSelected.Text = "Selected";
@@ -452,9 +458,9 @@ namespace DOTRMap
             // pnlSelected
             // 
             this.pnlSelected.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pnlSelected.Location = new System.Drawing.Point(11, 16);
+            this.pnlSelected.Location = new System.Drawing.Point(11, 17);
             this.pnlSelected.Name = "pnlSelected";
-            this.pnlSelected.Size = new System.Drawing.Size(64, 64);
+            this.pnlSelected.Size = new System.Drawing.Size(64, 69);
             this.pnlSelected.TabIndex = 0;
             this.pnlSelected.Paint += new System.Windows.Forms.PaintEventHandler(this.pnlSelected_Paint);
             // 
@@ -462,15 +468,9 @@ namespace DOTRMap
             // 
             this.tmrRefresh.Tick += new System.EventHandler(this.tmrRefresh_Tick);
             // 
-            // menuSaveIso
-            // 
-            this.menuSaveIso.Enabled = false;
-            this.menuSaveIso.Index = 2;
-            this.menuSaveIso.Text = "ISO";
-            // 
             // frmMain
             // 
-            this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
+            this.AutoScaleBaseSize = new System.Drawing.Size(5, 14);
             this.ClientSize = new System.Drawing.Size(392, 353);
             this.Controls.Add(this.tabctrlMain);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
@@ -502,12 +502,35 @@ namespace DOTRMap
 
         private void SaveSlus(String path, byte[] memorySlus)
         {
-            File.WriteAllBytes(path, memorySlus);
+            try
+            {
+                using (FileStream fs = new FileStream(path, FileMode.Open))
+                {
+                    fs.Seek(Constants.SLUSOFFSET, SeekOrigin.Begin);
+                    for (int i = 0; i < memorySlus.Length; i++)
+                    {
+                        fs.WriteByte(memorySlus[i]);
+                    }
+                }
+                MessageBox.Show($"Successfully wrote {memorySlus.Length} bytes.");
+            }
+            catch(Exception e)
+            {
+                MessageBox.Show($"Could not save SLUS file: {e}");
+            }
+            
         }
 
         private void SaveIso(String path, byte[] memoryIso)
         {
-            File.WriteAllBytes(path, memoryIso);
+            using (FileStream fs = new FileStream(path, FileMode.Open))
+            {
+                fs.Seek(Constants.ISOOFFSET, SeekOrigin.Begin);
+                for (int i = 0; i < memoryIso.Length; i++)
+                {
+                    fs.WriteByte(memoryIso[i]);
+                }
+            }
         }
 
 
@@ -515,10 +538,21 @@ namespace DOTRMap
         {
             isoMode = false;
             menuOpenIso.Enabled = false;
+            long fileSize = new System.IO.FileInfo(path).Length;
+
+            //TODO: advanced offset editing if file size is unexpected, along with a warning. For now, just provide a warning
+            if (fileSize != Constants.SLUSSIZE)
+            {
+                //throw new Exception("The SLUS provided was corrupt!");
+                MessageBox.Show("The SLUS size appears to be abnormal. The program will run, but the offset may be incorrect.", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+            
+
             using (FileStream fs = new FileStream(path, FileMode.Open, FileAccess.Read))
             {
-                memorySlus = new byte[fs.Length];
-                int bytesToRead = (int)fs.Length;
+                fs.Seek(Constants.SLUSOFFSET, SeekOrigin.Begin);
+                memorySlus = new byte[Constants.MAPSSIZE];
+                int bytesToRead = Constants.MAPSSIZE;
                 int bytesRead = 0;
                 while (bytesToRead > 0)
                 {
@@ -542,8 +576,9 @@ namespace DOTRMap
             menuOpenSlus.Enabled = false;
             using (FileStream fs = new FileStream(path, FileMode.Open, FileAccess.Read))
             {
-                memoryIso = new byte[fs.Length];
-                int bytesToRead = (int)fs.Length;
+                fs.Seek(Constants.ISOOFFSET, SeekOrigin.Begin);
+                memoryIso = new byte[Constants.MAPSSIZE];
+                int bytesToRead = Constants.MAPSSIZE;
                 int bytesRead = 0;
                 while(bytesToRead > 0)
                 {
@@ -588,14 +623,7 @@ namespace DOTRMap
 					{
                         slusPath = ofd.FileName;
                         fileSlus = OpenSlus(slusPath, fileSlus);
-
-                        //TODO: advanced offset editing if file size is unexpected, along with a warning. For now, just provide a warning
-                        if (fileSlus.Length != Constants.SLUSSIZE)
-                        {
-                            //throw new Exception("The SLUS provided was corrupt!");
-                            MessageBox.Show("The SLUS size appears to be abnormal. The program will run, but the offset may be incorrect.", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                        }
-						lblSlus.Text = "SLUS loaded\n" + fileSlus.Length.ToString() + " bytes.";
+                        lblSlus.Text = "SLUS loaded\n" + fileSlus.Length.ToString() + " bytes.";
 
                         //enable all SLUS related buttons
                         menuSaveSlus.Enabled = true;
@@ -861,12 +889,7 @@ namespace DOTRMap
         // load a map from the SLUS in memory given the selected index of lbxMaps
         private void btnLoad_Click(object sender, EventArgs e)
         {
-            int mapOffset;
-            if (!isoMode)
-                mapOffset = Constants.SLUSOFFSET;
-            else
-                mapOffset = Constants.ISOOFFSET;
-            mapOffset += lbxMaps.SelectedIndex * 0x31;
+            int mapOffset = lbxMaps.SelectedIndex * 0x31;
             byte[] slusMap = new byte[49];
             for(int i = 0; i < slusMap.Length; i++)
             {
@@ -882,12 +905,7 @@ namespace DOTRMap
         // export map from SLUS to dor file
         private void btnExport_Click(object sender, EventArgs e)
         {
-            int mapOffset;
-            if (!isoMode)
-                mapOffset = Constants.SLUSOFFSET;
-            else
-                mapOffset = Constants.ISOOFFSET;
-            mapOffset += lbxMaps.SelectedIndex * 0x31;
+            int mapOffset = lbxMaps.SelectedIndex * 0x31;
             byte[] slusMap = new byte[49];
             for (int i = 0; i < slusMap.Length; i++)
             {
@@ -909,12 +927,7 @@ namespace DOTRMap
             DialogResult result1 = MessageBox.Show("This will insert the map currently being edited into the specified slot. Would you like to continue?", "Warning", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
             if(result1 == DialogResult.Yes)
             {
-                int mapOffset;
-                if (!isoMode)
-                    mapOffset = Constants.SLUSOFFSET;
-                else
-                    mapOffset = Constants.ISOOFFSET;
-                mapOffset += lbxMaps.SelectedIndex * 0x31;
+                int mapOffset = lbxMaps.SelectedIndex * 0x31;
                 for(int i = 0; i < loadedMap.GetTilesLength(); i++)
                 {
                     if(!isoMode)
@@ -969,7 +982,8 @@ namespace DOTRMap
         // About DOTRMap
         private void menuHelpAbout_Click(object sender, EventArgs e)
         {
-            MessageBox.Show(Constants.VERSION + " built " + Constants.BUILT + " by thots.\nSpecial thanks: GenericMadScientist", "About DOTRMap", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            frmAbout aboutForm = new frmAbout();
+            aboutForm.ShowDialog();
         }
 
         

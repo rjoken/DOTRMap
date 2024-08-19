@@ -10,10 +10,9 @@ namespace DOTRMap
 	{
 		public const int TILESIZE = 32;
 
-		//this is manual the revision number is just the number of days i've worked on it
-		public const string VERSION = "DOTRMap v0.3.9";
+		public const string VERSION = "DOTRMap v1.0.0";
 
-		public const string BUILT = "02-01-2021";
+		public const string BUILT = "19-08-2024";
 
 		public const int SLUSSIZE = 0x21EBD8;
 
@@ -23,10 +22,13 @@ namespace DOTRMap
 
 		public const int ISOOFFSET = 0x29EF5C;
 
+		//Each map is 49 bytes long, and there are 46 maps. Total length of data we're interested in loading is 2254 bytes.
+		public const int MAPSSIZE = 0x8CE;
+
 		public static void SetDoubleBuffered(Control c)
 		{
 			PropertyInfo pi = typeof(Control).GetProperty("DoubleBuffered",
-				BindingFlags.NonPublic | BindingFlags.Instance);
+			BindingFlags.NonPublic | BindingFlags.Instance);
 			pi.SetValue(c, true, null);
 		}
 

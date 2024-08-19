@@ -86,6 +86,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DOTRMap\Constants.cs" />
+    <Compile Include="DOTRMap\frmAbout.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DOTRMap\frmAbout.Designer.cs">
+      <DependentUpon>frmAbout.cs</DependentUpon>
+    </Compile>
     <Compile Include="DOTRMap\frmMain.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -98,6 +104,18 @@
     <Compile Include="DOTRMap\Tile.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <EmbeddedResource Include="DOTRMap\frmAbout.resx">
+      <DependentUpon>frmAbout.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Include="Resources\ROSE.ICO" />
     <EmbeddedResource Include="DOTRMap\frmMain.resx">
       <DependentUpon>frmMain.cs</DependentUpon>
