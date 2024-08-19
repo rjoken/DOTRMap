@@ -1,11 +1,10 @@
 # DOTRMap
 A map editor for Yu-Gi-Oh! The Duelists of the Roses
 
-
-![image](https://user-images.githubusercontent.com/17675149/224059594-23c0c56b-d3a5-431b-9b0e-0ed6989cce91.png)
+![image](https://github.com/user-attachments/assets/5f8d748f-f090-431e-8c39-b7513c6edfba)
 
 ## Install
-You can download the latest version of DOTRMap from the [Releases Page](https://github.com/rjoken/DOTRMap/releases). The latest version is v0.3.9
+You can download the latest version of DOTRMap from the [Releases Page](https://github.com/rjoken/DOTRMap/releases). The latest version is v1.0.0
 
 This tool is only available natively for Windows (NT 5.0 - 10.0 are tested working). I have not tested with Wine - your mileage may vary.
 
@@ -38,7 +37,6 @@ If you elect not to save when the tool asks you to when clicking "Inject Map", r
 
 ## Planned Features
 * ISO/SLUS integrity checking.
-* Better/faster/more efficient ISO loading (current implementation is very lazy)
 
 ## License
 This project is licensed under the [MIT License](https://github.com/rjoken/DOTRMap/blob/master/LICENSE).
